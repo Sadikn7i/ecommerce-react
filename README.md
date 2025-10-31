@@ -12,6 +12,13 @@ A fully-featured, modern e-commerce web application built with React, TypeScript
 [Live Demo](#) | [Features](#-features) | [Installation](#-installation) | [Screenshots](#-screenshots)
 
 </div>
+## 📸 Screenshots
+
+### Home Page
+![Home Page](https://raw.githubusercontent.com/Sadikn7i/ecommerce-react/master/Page%201.png)
+
+### Products Page
+![Products Page](https://raw.githubusercontent.com/Sadikn7i/ecommerce-react/master/page%202.png)
 
 ---
 
