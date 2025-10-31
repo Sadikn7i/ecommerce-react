@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 
 export type Product = {
   id: number;
@@ -23,6 +24,8 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const inWishlist = isInWishlist(product.id);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -30,8 +33,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
     if (onAddToCart) onAddToCart();
   };
 
+  const handleWishlistToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (inWishlist) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
+  };
+
   return (
     <div style={styles.card}>
+      <button onClick={handleWishlistToggle} style={styles.wishlistBtn}>
+        {inWishlist ? '❤️' : '🤍'}
+      </button>
+      
       <Link to={`/products/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
         <img src={product.image} alt={product.title} style={styles.image} />
         <h3 style={styles.title}>{product.title}</h3>
@@ -63,6 +79,21 @@ const styles = {
     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
     transition: 'transform 0.2s, box-shadow 0.2s',
     backgroundColor: 'white',
+    position: 'relative' as const,
+  },
+  wishlistBtn: {
+    position: 'absolute' as const,
+    top: 15,
+    right: 15,
+    background: 'white',
+    border: 'none',
+    borderRadius: '50%',
+    width: 40,
+    height: 40,
+    fontSize: '1.5rem',
+    cursor: 'pointer',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+    zIndex: 10,
   },
   image: {
     width: '100%',

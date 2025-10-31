@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useOrders } from '../context/OrderContext';
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
 
@@ -22,6 +23,7 @@ interface FormData {
 
 const CheckoutPage: React.FC = () => {
   const { cart, getCartTotal, clearCart } = useCart();
+  const { addOrder } = useOrders();
   const navigate = useNavigate();
   const { toast, showToast, hideToast } = useToast();
 
@@ -96,11 +98,14 @@ const CheckoutPage: React.FC = () => {
     e.preventDefault();
     
     if (validateForm()) {
-      // Simulate order placement
+      // Create order
+      const shippingAddress = `${formData.address}, ${formData.city}, ${formData.zipCode}, ${formData.country}`;
+      addOrder(cart, total, shippingAddress);
+      
       showToast('Order placed successfully! 🎉', 'success');
       setTimeout(() => {
         clearCart();
-        navigate('/');
+        navigate('/orders');
       }, 2000);
     } else {
       showToast('Please fix the errors in the form', 'error');

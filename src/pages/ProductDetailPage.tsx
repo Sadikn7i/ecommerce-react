@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import type { Product } from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { useReviews } from '../context/ReviewContext';
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
 
@@ -13,7 +15,17 @@ const ProductDetailPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+  const { user, isAuthenticated } = useAuth();
+  const { addReview, getProductReviews, getAverageRating } = useReviews();
   const { toast, showToast, hideToast } = useToast();
+
+  // Review form state
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+
+  const productId = parseInt(id || '0');
+  const reviews = getProductReviews(productId);
+  const avgRating = getAverageRating(productId);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -45,6 +57,22 @@ const ProductDetailPage: React.FC = () => {
     navigate('/cart');
   };
 
+  const handleSubmitReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      showToast('Please login to leave a review', 'error');
+      return;
+    }
+    if (!reviewComment.trim()) {
+      showToast('Please write a comment', 'error');
+      return;
+    }
+    addReview(productId, reviewRating, reviewComment, user?.firstName + ' ' + user?.lastName || 'Anonymous');
+    showToast('Review added! ⭐', 'success');
+    setReviewComment('');
+    setReviewRating(5);
+  };
+
   if (isLoading) return <div style={styles.loading}>Loading... ⏳</div>;
   if (!product) return <div style={styles.error}>Product not found</div>;
 
@@ -69,6 +97,12 @@ const ProductDetailPage: React.FC = () => {
             <div style={styles.ratingContainer}>
               <span style={styles.rating}>⭐ {product.rating.rate.toFixed(1)}</span>
               <span style={styles.reviewCount}>({product.rating.count} reviews)</span>
+            </div>
+          )}
+
+          {reviews.length > 0 && (
+            <div style={styles.customRating}>
+              <span>User Reviews: ⭐ {avgRating.toFixed(1)} ({reviews.length} reviews)</span>
             </div>
           )}
 
@@ -118,6 +152,63 @@ const ProductDetailPage: React.FC = () => {
             <div style={styles.feature}>✓ Secure Payment</div>
             <div style={styles.feature}>✓ 1-Year Warranty</div>
           </div>
+        </div>
+      </div>
+
+      {/* Reviews Section */}
+      <div style={styles.reviewsSection}>
+        <h2 style={styles.reviewsTitle}>Customer Reviews ⭐</h2>
+
+        {/* Add Review Form */}
+        {isAuthenticated ? (
+          <form onSubmit={handleSubmitReview} style={styles.reviewForm}>
+            <h3>Write a Review</h3>
+            <div style={styles.ratingSelect}>
+              <label>Rating: </label>
+              {[1,2,3,4,5].map(star => (
+                <span 
+                  key={star}
+                  onClick={() => setReviewRating(star)}
+                  style={{...styles.star, color: star <= reviewRating ? '#f39c12' : '#ddd'}}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+            <textarea
+              value={reviewComment}
+              onChange={(e) => setReviewComment(e.target.value)}
+              placeholder="Share your experience with this product..."
+              style={styles.reviewTextarea}
+              rows={4}
+              required
+            />
+            <button type="submit" style={styles.submitReviewBtn}>Submit Review</button>
+          </form>
+        ) : (
+          <p style={styles.loginPrompt}>
+            Please <a href="/login">login</a> to leave a review
+          </p>
+        )}
+
+        {/* Display Reviews */}
+        <div style={styles.reviewsList}>
+          {reviews.length === 0 ? (
+            <p style={styles.noReviews}>No reviews yet. Be the first to review!</p>
+          ) : (
+            reviews.map(review => (
+              <div key={review.id} style={styles.reviewCard}>
+                <div style={styles.reviewHeader}>
+                  <strong>{review.userName}</strong>
+                  <span style={styles.reviewRating}>
+                    {'⭐'.repeat(review.rating)}
+                  </span>
+                </div>
+                <p style={styles.reviewDate}>{new Date(review.date).toLocaleDateString()}</p>
+                <p style={styles.reviewText}>{review.comment}</p>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
@@ -185,7 +276,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    marginBottom: '20px',
+    marginBottom: '10px',
   },
   rating: {
     fontSize: '1.1rem',
@@ -195,6 +286,12 @@ const styles = {
   reviewCount: {
     fontSize: '1rem',
     color: '#7f8c8d',
+  },
+  customRating: {
+    fontSize: '1rem',
+    color: '#27ae60',
+    marginBottom: '10px',
+    fontWeight: 'bold',
   },
   price: {
     fontSize: '2.5rem',
@@ -290,6 +387,97 @@ const styles = {
     backgroundColor: '#ecf0f1',
     borderRadius: '6px',
     fontSize: '0.95rem',
+    color: '#2c3e50',
+  },
+  reviewsSection: {
+    marginTop: '60px',
+    padding: '40px',
+    backgroundColor: '#f8f9fa',
+    borderRadius: '12px',
+  },
+  reviewsTitle: {
+    fontSize: '2rem',
+    marginBottom: '30px',
+  },
+  reviewForm: {
+    backgroundColor: 'white',
+    padding: '30px',
+    borderRadius: '12px',
+    marginBottom: '40px',
+  },
+  ratingSelect: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    marginBottom: '20px',
+    fontSize: '1.5rem',
+  },
+  star: {
+    cursor: 'pointer',
+    transition: 'color 0.2s',
+  },
+  reviewTextarea: {
+    width: '100%',
+    padding: '15px',
+    fontSize: '1rem',
+    borderRadius: '8px',
+    border: '1px solid #ddd',
+    marginBottom: '20px',
+    fontFamily: 'inherit',
+  },
+  submitReviewBtn: {
+    padding: '12px 30px',
+    backgroundColor: '#3498db',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '1.1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+  },
+  loginPrompt: {
+    textAlign: 'center' as const,
+    padding: '30px',
+    backgroundColor: 'white',
+    borderRadius: '12px',
+    marginBottom: '40px',
+    fontSize: '1.1rem',
+  },
+  reviewsList: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '20px',
+  },
+  noReviews: {
+    textAlign: 'center' as const,
+    padding: '40px',
+    color: '#7f8c8d',
+    fontSize: '1.1rem',
+  },
+  reviewCard: {
+    backgroundColor: 'white',
+    padding: '25px',
+    borderRadius: '12px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+  },
+  reviewHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '10px',
+  },
+  reviewRating: {
+    color: '#f39c12',
+    fontSize: '1.2rem',
+  },
+  reviewDate: {
+    fontSize: '0.85rem',
+    color: '#7f8c8d',
+    marginBottom: '15px',
+  },
+  reviewText: {
+    fontSize: '1rem',
+    lineHeight: '1.6',
     color: '#2c3e50',
   },
   loading: {

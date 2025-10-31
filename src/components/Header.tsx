@@ -2,9 +2,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const Header: React.FC = () => {
   const { getCartCount } = useCart();
+  const { user, logout, isAuthenticated } = useAuth();
   const cartCount = getCartCount();
 
   return (
@@ -16,12 +18,28 @@ const Header: React.FC = () => {
         <div style={styles.navLinks}>
           <Link to="/" style={styles.link}>Home</Link>
           <Link to="/products" style={styles.link}>Products</Link>
+          <Link to="/wishlist" style={styles.link}>❤️ Wishlist</Link>
           <Link to="/cart" style={styles.linkWithBadge}>
             Cart
             {cartCount > 0 && (
               <span style={styles.badge}>{cartCount}</span>
             )}
           </Link>
+          
+          {isAuthenticated ? (
+            <>
+              <Link to="/orders" style={styles.link}>📦 Orders</Link>
+              <span style={styles.userName}>Hi, {user?.firstName}!</span>
+              <button onClick={logout} style={styles.logoutButton}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" style={styles.link}>Login</Link>
+              <Link to="/signup" style={styles.signupButton}>Sign Up</Link>
+            </>
+          )}
         </div>
       </nav>
     </header>
@@ -54,25 +72,28 @@ const styles = {
   },
   navLinks: {
     display: 'flex',
-    gap: '30px',
+    gap: '15px',
     alignItems: 'center',
+    flexWrap: 'wrap' as const,
   },
   link: {
     color: 'white',
     textDecoration: 'none',
-    fontSize: '1.1rem',
-    padding: '8px 15px',
+    fontSize: '1rem',
+    padding: '8px 12px',
     borderRadius: '4px',
     transition: 'background-color 0.3s',
+    whiteSpace: 'nowrap' as const,
   } as React.CSSProperties,
   linkWithBadge: {
     color: 'white',
     textDecoration: 'none',
-    fontSize: '1.1rem',
-    padding: '8px 15px',
+    fontSize: '1rem',
+    padding: '8px 12px',
     borderRadius: '4px',
     transition: 'background-color 0.3s',
     position: 'relative',
+    whiteSpace: 'nowrap' as const,
   } as React.CSSProperties,
   badge: {
     position: 'absolute',
@@ -87,6 +108,31 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '0.75rem',
+    fontWeight: 'bold',
+  } as React.CSSProperties,
+  userName: {
+    color: 'white',
+    fontSize: '0.95rem',
+    fontWeight: '500',
+    padding: '0 8px',
+  },
+  logoutButton: {
+    backgroundColor: '#e74c3c',
+    color: 'white',
+    border: 'none',
+    padding: '8px 15px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '0.95rem',
+    fontWeight: 'bold',
+  },
+  signupButton: {
+    backgroundColor: '#27ae60',
+    color: 'white',
+    textDecoration: 'none',
+    padding: '8px 15px',
+    borderRadius: '4px',
+    fontSize: '1rem',
     fontWeight: 'bold',
   } as React.CSSProperties,
 };
