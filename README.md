@@ -1,73 +1,198 @@
-# React + TypeScript + Vite
+# 🛍️ ShopHub - Modern E-Commerce Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<div align="center">
 
-Currently, two official plugins are available:
+![React](https://img.shields.io/badge/React-19.1.1-blue?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue?logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?logo=vite)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A fully-featured, modern e-commerce web application built with React, TypeScript, and Vite. Features a complete shopping cart system, advanced filtering, checkout flow, and responsive design.
 
-## React Compiler
+[Live Demo](#) | [Features](#-features) | [Installation](#-installation) | [Screenshots](#-screenshots)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+</div>
+## 📸 Screenshots
 
-## Expanding the ESLint configuration
+### Home Page
+![Home Page](https://raw.githubusercontent.com/Sadikn7i/ecommerce-react/master/Page%201.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Products Page
+![Products Page](https://raw.githubusercontent.com/Sadikn7i/ecommerce-react/master/page%202.png)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 📋 Table of Contents
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Project Structure](#-project-structure)
+- [API Integration](#-api-integration)
+- [Screenshots](#-screenshots)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Contact](#-contact)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ✨ Features
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 🛒 Shopping Cart System
+- Add/remove products with one click
+- Update quantities dynamically
+- Real-time cart total calculation
+- Persistent cart storage (localStorage)
+- Cart badge with item count in header
+
+### 🔍 Advanced Product Filtering
+- **Search** - Find products by name or description
+- **Category Filter** - Browse by product categories
+- **Sort Options** - Price (low to high, high to low), Rating
+- Real-time filter results
+- Product count display
+
+### 💳 Complete Checkout Flow
+- Multi-step checkout form
+- **Shipping Information** - Name, address, contact details
+- **Payment Information** - Card details with validation
+- Form validation with error messages
+- Order summary with price breakdown
+- Tax and shipping calculations
+
+### 🎨 Modern UI/UX
+- Responsive design (mobile, tablet, desktop)
+- Toast notifications for user actions
+- Smooth animations and transitions
+- Clean, professional design system
+- Loading states and error handling
+
+### 📱 Additional Features
+- Product detail pages with full information
+- Star ratings and review counts
+- Related product suggestions
+- Easy navigation with React Router
+- Fast performance with Vite
+
+---
+
+## 🚀 Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| **React 19.1.1** | UI framework for building interactive interfaces |
+| **TypeScript 5.9.3** | Type safety and better developer experience |
+| **Vite 6.0** | Lightning-fast build tool and dev server |
+| **React Router 7.9.5** | Client-side routing and navigation |
+| **Context API** | Global state management for cart |
+| **Fake Store API** | External API for product data |
+| **Custom Hooks** | Reusable logic (useToast, useCart) |
+| **LocalStorage** | Persistent cart storage |
+
+---
+
+## 📦 Installation
+
+### Prerequisites
+- **Node.js** (v18 or higher)
+- **npm** or **yarn**
+
+### Steps
+
+1. **Clone the repository**
+## 📁 Project Structure
+
+
+## 🗺️ Roadmap
+
+### ✅ Completed
+- [x] Shopping cart functionality
+- [x] Product filtering and search
+- [x] Checkout flow with validation
+- [x] Responsive design
+- [x] Toast notifications
+
+### 🚧 In Progress
+- [ ] User authentication (login/signup)
+- [ ] Wishlist/favorites
+- [ ] Order history
+- [ ] Product reviews and ratings
+
+### 📅 Future Enhancements
+- [ ] Backend integration (Node.js/Express)
+- [ ] Database (MongoDB/PostgreSQL)
+- [ ] Payment gateway (Stripe)
+- [ ] Email notifications
+- [ ] Admin dashboard
+- [ ] Multi-language support
+- [ ] Dark mode toggle
+- [ ] Product comparison
+- [ ] Discount codes/coupons
+- [ ] Customer support chat
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how you can help:
+
+1. **Fork the repository**
+2. **Create a feature branch**
+
+5. **Open a Pull Request**
+
+### Contribution Guidelines
+- Follow existing code style
+- Write meaningful commit messages
+- Add comments for complex logic
+- Test your changes thoroughly
+- Update documentation as needed
+
+---
+
+## 📝 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+
+---
+
+## 👨‍💻 Author
+
+**Your Name**
+
+- GitHub: [@Sadikn7i](https://github.com/Sadikn7i)
+- LinkedIn: [Sadik Aden](https://www.linkedin.com/in/sadik-aden-a24440385/)
+- Email: spiritx98@gmail.com
+
+---
+
+## 🙏 Acknowledgments
+
+- [React Documentation](https://react.dev/)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Vite Guide](https://vitejs.dev/guide/)
+- [Fake Store API](https://fakestoreapi.com/)
+- [React Router](https://reactrouter.com/)
+
+---
+
+## 💡 Learn More
+
+### Useful Resources
+- [React Best Practices](https://react.dev/learn)
+- [TypeScript Patterns](https://www.typescriptlang.org/docs/handbook/intro.html)
+- [Context API Guide](https://react.dev/reference/react/useContext)
+- [Vite Performance](https://vitejs.dev/guide/why.html)
+
+---
+
+<div align="center">
+
+**⭐ Star this repo if you found it helpful!**
+
+Made with ❤️ and ☕ by [Sadik Aden]
+
+</div>
