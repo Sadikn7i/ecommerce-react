@@ -1,4 +1,4 @@
-# 🛍️ ShopHub - Modern E-Commerce Platform
+
 
 <div align="center">
 
